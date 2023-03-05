@@ -1,53 +1,45 @@
 ﻿from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 import time
 import urllib.request
 import os, sys
 
 def crawling(bird_name: str) -> None:
-    if not os.path.isdir(f"Dataset/{bird_name}/"):
-        os.makedirs(f"Dataset/{bird_name}/")
+    dataset = f"C:/Users/moord/Documents/Project/Dataset/{bird_name}/"
+    if not os.path.isdir(dataset):
+        os.makedirs(dataset)
     
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    
     driver.get("https://www.google.co.kr/imghp?hl=ko")
+    driver.implicitly_wait(time_to_wait=10)
+    keyElement = driver.find_element(By.XPATH, '/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input')
+    keyElement.send_keys(bird_name)
+    keyElement.send_keys(Keys.RETURN)
 
-    search = bird_name
-    elem = driver.find_element(By.NAME, "q")
-    elem.send_keys(search)
-    elem.send_keys(Keys.RETURN)
-
-    SCROLL_PAUSE_TIME = 1
-
-    last_height = driver.execute_script("return document.body.scrollHeight")
-
-    while True:
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(SCROLL_PAUSE_TIME)
-        new_height = driver.execute_script("return document.body.scrollHeight")
-
-        if new_height == last_height:
-            try:
-                driver.find_element(By.CSS_SELECTOR, ".mye4qd").click()
-            except:
-                break
-    last_height = new_height
+    bodyElement = driver.find_element(By.TAG_NAME, 'body')
+    time.sleep(5)
+    for _ in range(30):
+        bodyElement.send_keys(Keys.PAGE_DOWN)
+        time.sleep(5)
     
-    images = driver.find_elements(By.CSS_SELECTOR, ".rg_i.Q4LuWd")
-    count = 1
-
-    for image in images:
-        try:
-            image.click()
-            time.sleep(2)
-            imgUrl = driver.find_element(By.XPATH, "//*[@id='islrg']/div[1]/div[1]/a[1]/div[1]/img").get_attribute('src')
-            urllib.request.urlretrieve(imgUrl, f"{bird_name}/{count:0>3}.jpg")
-            print(f"Image saved: {count:0>3}.jpg")
-            count += 1
-        except:
-            pass
-
-    driver.close()
+    images = driver.find_elements(By.CSS_SELECTOR, "#islrg > div.islrc > div > a.wXeWr.islib.nfEiy > div.bRMDJf.islir > img" )
+    imageURL = []
+    try:
+        for image in images:
+            if image.get_attribute('src') is not None:
+                imageURL.append(image.get_attribute('src'))
+                
+        for seq, urlImg in enumerate(imageURL):
+            urllib.request.urlretrieve(urlImg, dataset + f"{seq:0>3}.jpg")
+    except:
+        pass
+    
+    print("Crawling End")
 
 
 if __name__ == "__main__":
@@ -56,4 +48,4 @@ if __name__ == "__main__":
     if len(args) == 2:
         crawling(args[1])
     else:
-        print("Error: Unappropriate Argument")
+        print("Error: inappropriate Argument")
