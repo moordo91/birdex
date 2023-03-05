@@ -25,7 +25,7 @@ def crawling(bird_name: str) -> None:
     time.sleep(5)
     for _ in range(30):
         bodyElement.send_keys(Keys.PAGE_DOWN)
-        time.sleep(5)
+        time.sleep(0.5)
     
     images = driver.find_elements(By.CSS_SELECTOR, "#islrg > div.islrc > div > a.wXeWr.islib.nfEiy > div.bRMDJf.islir > img" )
     imageURL = []
