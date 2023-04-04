@@ -14,10 +14,20 @@
   </head>
   <body>
     <div>Birdex</div>
-    <button type="button" class="btn btn-primary" onclick="init()">
+    <button
+      type="button"
+      id="btn-start"
+      class="btn btn-primary"
+      onclick="init(); this.disabled=true;"
+    >
       Start
     </button>
-    <button type="button" class="btn btn-secondary" onclick="predict()">
+    <button
+      type="button"
+      id="btn-predict"
+      class="btn btn-secondary"
+      onclick="predict()"
+    >
       Predict
     </button>
 
@@ -78,10 +88,6 @@
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
 
-        // load the model and metadata
-        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-        // or files from your local hard drive
-        // Note: the pose library adds "tmImage" object to your window (window.tmImage)
         model = await tmImage.load(modelURL, metadataURL);
         maxPredictions = model.getTotalClasses();
 
@@ -97,12 +103,25 @@
         // predict can take in an image, video or canvas html element
         var image = document.getElementById("bird-image");
         const prediction = await model.predict(image, false);
+        var maxProbability = 0;
+        var maxClass = "";
         for (let i = 0; i < maxPredictions; i++) {
           const classPrediction =
             prediction[i].className +
             ": " +
             prediction[i].probability.toFixed(2);
           labelContainer.childNodes[i].innerHTML = classPrediction;
+          if (prediction[i].probability > maxProbability) {
+            maxProbability = prediction[i].probability;
+            maxClass = prediction[i].className;
+          }
+        }
+        let answer = confirm(maxClass + "가 맞습니까?");
+
+        if (answer) {
+          console.log("User clicked 'OK' or 'Yes'");
+        } else {
+          console.log("User clicked 'Cancel' or 'No'");
         }
       }
     </script>
