@@ -10,5 +10,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/capture/')
+def capture():
+    return render_template('capture.html')
+
+@app.route('/birdex/')
+def birdex():
+    return render_template('birdex_list.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
