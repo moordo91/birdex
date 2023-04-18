@@ -11,6 +11,14 @@
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
+    <!-- <script>
+      function callPythonFunction(funcName, num_id) {
+        fetch("birdex.py?func=" + funcName + "&num_id=" + num_id)
+          .then((response) => response.text())
+          .then((data) => console.log(data))
+          .catch((error) => console.error(error));
+      }
+    </script> -->
   </head>
   <body>
     <div>Birdex</div>
@@ -105,6 +113,7 @@
         const prediction = await model.predict(image, false);
         var maxProbability = 0;
         var maxClass = "";
+        var num_id = 0;
         for (let i = 0; i < maxPredictions; i++) {
           const classPrediction =
             prediction[i].className +
@@ -114,12 +123,14 @@
           if (prediction[i].probability > maxProbability) {
             maxProbability = prediction[i].probability;
             maxClass = prediction[i].className;
+            num_id = i;
           }
         }
         let answer = confirm(maxClass + "가 맞습니까?");
 
         if (answer) {
           alert(maxClass + "를 잡았다!!");
+          callPythonFunction("get_photo", num_id);
         } else {
           alert("다시 촬영해주세요!");
         }
