@@ -2,22 +2,6 @@
 import database as db
 from datetime import datetime
 
-def birdex_content():
-    return """
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Document</title>
-        </head>
-        <body>
-            
-        </body>
-        </html>
-"""
-
 app = Flask(__name__, static_url_path='/static')
 
 @app.route('/')
@@ -42,11 +26,21 @@ def update():
     db.update(sql)
     return "TODO"
     
-@app.route('/birdex/content/')
-def birdex_content():
-    df = db.get_switch()
-    switch_frame = df.to_json()
-    return render_template('birdex_content.html', switch_frame=switch_frame)
+@app.route('/birdex/content/<id_num>')
+def birdex_content(id_num):
+    id_num = int(id_num)
+    birdex_series = db.birdex(id_num)
+    if id_num == 0:
+        id_num = '???'
+    return render_template('birdex_content.html', id_num=id_num, 
+                            k_name=birdex_series['k_name'],
+                            e_name=birdex_series['e_name'],
+                            s_name=birdex_series['s_name'],
+                            length=birdex_series['length'],
+                            weight=birdex_series['weight'],
+                            date=birdex_series['date'],
+                            description=birdex_series['description']
+                            )
 
 if __name__ == '__main__':
     app.run(debug=True)

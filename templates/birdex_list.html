@@ -21,21 +21,27 @@
               var switch_frame = "{{switch_frame}}";
               switch_frame = switch_frame.replace(/&#34;/g, '"');
               switch_frame = JSON.parse(switch_frame);
-              console.log(switch_frame);
-              for (var i = 1; i < Object.keys(switch_frame).length; i++) {
-                if (switch_frame[i.toString()] == 0) {
+              for (
+                var i = 1;
+                i < Object.keys(switch_frame["k_name"]).length;
+                i++
+              ) {
+                if (switch_frame["get_switch"][i.toString()] == 0) {
                   document.write(
-                    '<a href="content" class="list-group-item list-group-item-action">NO. ',
+                    '<a href="content/0" class="list-group-item list-group-item-action">NO. ',
                     i.toString().padStart(3, "0"),
                     "\t",
                     "???</a>"
                   );
                 } else {
                   document.write(
-                    '<a href="content" class="list-group-item list-group-item-action">NO. ',
+                    '<a href="content/',
+                    i,
+                    '" class="list-group-item list-group-item-action">NO. ',
                     i.toString().padStart(3, "0"),
                     "\t",
-                    "???</a>"
+                    switch_frame["k_name"][i.toString()],
+                    "</a>"
                   );
                 }
               }
