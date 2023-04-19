@@ -6,5 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body></body>
+  <body>
+    <h1>Birdex Content</h1>
+    <script>
+      // Retrieve the value of "i" from the URL
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const i = urlParams.get("i");
+
+      // Display the value of "i" on the page
+      const iElement = document.createElement("h2");
+      iElement.textContent =
+        "You clicked on NO. " + i.toString().padStart(3, "0");
+      document.body.appendChild(iElement);
+    </script>
+  </body>
 </html>
