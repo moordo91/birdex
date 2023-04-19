@@ -18,13 +18,26 @@
           <h1>Birdex</h1>
           <div class="list-group">
             <script>
-              for (var i = 1; i <= 10; i++) {
-                document.write(
-                  '<a href="birdex_content.html" class="list-group-item list-group-item-action">NO. ',
-                  i.toString().padStart(3, "0"),
-                  "\t",
-                  "???</a>"
-                );
+              var switch_frame = "{{switch_frame}}";
+              switch_frame = switch_frame.replace(/&#34;/g, '"');
+              switch_frame = JSON.parse(switch_frame);
+              console.log(switch_frame);
+              for (var i = 1; i < Object.keys(switch_frame).length; i++) {
+                if (switch_frame[i.toString()] == 0) {
+                  document.write(
+                    '<a href="content" class="list-group-item list-group-item-action">NO. ',
+                    i.toString().padStart(3, "0"),
+                    "\t",
+                    "???</a>"
+                  );
+                } else {
+                  document.write(
+                    '<a href="content" class="list-group-item list-group-item-action">NO. ',
+                    i.toString().padStart(3, "0"),
+                    "\t",
+                    "???</a>"
+                  );
+                }
               }
             </script>
           </div>

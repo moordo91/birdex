@@ -79,7 +79,7 @@
       // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
       // the link to your model provided by Teachable Machine export panel
-      const URL = "./my_model/";
+      const URL = "../static/";
 
       let model, webcam, labelContainer, maxPredictions;
 
@@ -100,11 +100,13 @@
 
       // run the webcam image through the image model
       async function predict() {
+        console.log(model);
         // predict can take in an image, video or canvas html element
         var image = document.getElementById("bird-image");
         const prediction = await model.predict(image, false);
         var maxProbability = 0;
         var maxClass = "";
+        var maxIndex = 0;
         for (let i = 0; i < maxPredictions; i++) {
           const classPrediction =
             prediction[i].className +
@@ -114,12 +116,23 @@
           if (prediction[i].probability > maxProbability) {
             maxProbability = prediction[i].probability;
             maxClass = prediction[i].className;
+            maxIndex = i;
           }
         }
+
         let answer = confirm(maxClass + "가 맞습니까?");
 
         if (answer) {
           alert(maxClass + "를 잡았다!!");
+          fetch(`${window.origin}/send_index`, {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify(maxIndex),
+            cache: "no-cache",
+            headers: new Headers({
+              "content-type": "application/json",
+            }),
+          });
         } else {
           alert("다시 촬영해주세요!");
         }
