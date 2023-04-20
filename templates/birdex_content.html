@@ -12,6 +12,7 @@
     />
     <style>
       .book-ct {
+        padding-top: 20px;
         padding-bottom: 35px;
       }
 
@@ -39,10 +40,10 @@
       }
 
       .book-ct .bx-content h3 > p {
-        margin: 0;
         font-size: 22px;
         font-weight: 500;
         color: #999;
+        margin-bottom: 0;
       }
 
       .font-lato {
@@ -62,7 +63,6 @@
       }
 
       .book-ct .bx-detail > div + div {
-        margin: 0;
         margin-top: 5px;
         padding-top: 5px;
         border-top: 1px solid #f1f1f1;
@@ -93,7 +93,12 @@
           <!-- <img src="" alt> -->
           <div class="col-lg-6 col-12">
             <h3>
-              <p class="font-lato">No. {{id_num}}</p>
+              <p class="font-lato">
+                <script>
+                  var id_num = "{{id_num}}";
+                  document.write("No. ", id_num.toString().padStart(3, "0"));
+                </script>
+              </p>
               {{k_name}}
               <p style="padding-top: 5px"></p>
             </h3>
