@@ -23,7 +23,6 @@ def get_switch():
     result = cursor.fetchall()
     df = pd.DataFrame(result)
     data = pd.concat([df['k_name'], df['get_switch']], axis=1)
-    print(data)
     con.close()
     return data
 
