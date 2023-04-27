@@ -22,6 +22,7 @@
   </head>
   <body>
     <div>Birdex</div>
+
     <button
       type="button"
       id="btn-start"
@@ -30,6 +31,7 @@
     >
       Start
     </button>
+
     <button
       type="button"
       id="btn-predict"
@@ -39,15 +41,17 @@
       Predict
     </button>
 
-    <input
-      id="myFileInput"
-      type="file"
-      accept="image/*;capture=camera"
-      onchange="setThumbnail(event);"
-    />
-    <div class="container">
-      <div class="col-md-4 px-0" id="image_container"></div>
-    </div>
+    <form method="POST" enctype="multipart/form-data">
+      <input
+        id="myFileInput"
+        type="file"
+        accept="image/*;capture=camera"
+        onchange="setThumbnail(event);"
+      />
+      <div class="container">
+        <div class="col-md-4 px-0" id="image_container"></div>
+      </div>
+    </form>
 
     <div id="webcam-container"></div>
     <div id="label-container"></div>
@@ -132,14 +136,15 @@
 
         if (answer) {
           alert(maxClass + "를 잡았다!!");
+          var formData = new FormData();
+          formData.append("image", myInput.files[0]);
+          formData.append("maxIndex", maxIndex);
+          console.log(formData.get("image"));
           fetch(`${window.origin}/send_index`, {
             method: "POST",
             credentials: "include",
-            body: JSON.stringify(maxIndex),
+            body: formData,
             cache: "no-cache",
-            headers: new Headers({
-              "content-type": "application/json",
-            }),
           });
         } else {
           alert("다시 촬영해주세요!");
