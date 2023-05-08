@@ -1,4 +1,4 @@
-# **Project for Capstone Design**
+# **Project for a more enjoyable world**
 
 ## **Birdex (working title)**
 
