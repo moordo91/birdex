@@ -1,4 +1,5 @@
 {
+  "maxPredictions": 5,
   "labels": ["까마귀", "까치", "비둘기", "왜가리", "참새"],
   "imageSize": 224
 }

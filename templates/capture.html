@@ -23,31 +23,12 @@
   <body>
     <div>Birdex</div>
 
-    <button
-      type="button"
-      id="btn-start"
-      class="btn btn-primary"
-      onclick="init(); this.disabled=true;"
-    >
-      Start
-    </button>
+    <button type="button" id="btn-start" class="btn btn-primary" onclick="init(); this.disabled=true;">Start</button>
 
-    <button
-      type="button"
-      id="btn-predict"
-      class="btn btn-secondary"
-      onclick="predict()"
-    >
-      Predict
-    </button>
+    <button type="button" id="btn-predict" class="btn btn-secondary" onclick="predict()">Predict</button>
 
     <form method="POST" enctype="multipart/form-data">
-      <input
-        id="myFileInput"
-        type="file"
-        accept="image/*;capture=camera"
-        onchange="setThumbnail(event);"
-      />
+      <input id="myFileInput" type="file" accept="image/*;capture=camera" onchange="setThumbnail(event);" />
       <div class="container">
         <div class="col-md-4 px-0" id="image_container"></div>
       </div>
@@ -93,41 +74,50 @@
       // the link to your model provided by Teachable Machine export panel
       const URL = "../static/";
 
-      let model, webcam, labelContainer, maxPredictions;
+      let model, labelContainer, metadata, maxPredictions;
 
       // Load the image model and setup the webcam
       async function init() {
         const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
-
-        model = await tmImage.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
+        const response = await fetch(URL + "metadata.json");
+        metadata = await response.json();
+        maxPredictions = metadata.maxPredictions;
+        model = await tf.loadGraphModel(modelURL);
 
         labelContainer = document.getElementById("label-container");
         for (let i = 0; i < maxPredictions; i++) {
-          // and class labels
           labelContainer.appendChild(document.createElement("div"));
         }
       }
 
       // run the webcam image through the image model
       async function predict() {
-        console.log(model);
         // predict can take in an image, video or canvas html element
         var image = document.getElementById("bird-image");
-        const prediction = await model.predict(image, false);
+        // Preprocess the image
+        const preprocessedImage = await preprocessImage(image);
+
+        // Use the model to do inference on a tensor representing an image
+        const probability = await model.predict(preprocessedImage).data();
+
+        class Prediction {
+          constructor(probability, className) {
+            this.probability = probability;
+            this.className = className;
+          }
+        }
+
+        let prediction = new Prediction(probability, metadata.labels);
         var maxProbability = 0;
         var maxClass = "";
         var maxIndex = 0;
+
         for (let i = 0; i < maxPredictions; i++) {
-          const classPrediction =
-            prediction[i].className +
-            ": " +
-            prediction[i].probability.toFixed(2);
+          const classPrediction = prediction.className[i] + ": " + prediction.probability[i].toFixed(2);
           labelContainer.childNodes[i].innerHTML = classPrediction;
-          if (prediction[i].probability > maxProbability) {
-            maxProbability = prediction[i].probability;
-            maxClass = prediction[i].className;
+          if (prediction.probability[i] > maxProbability) {
+            maxProbability = prediction.probability[i];
+            maxClass = prediction.className[i];
             maxIndex = i;
           }
         }
@@ -135,11 +125,10 @@
         let answer = confirm(maxClass + "가 맞습니까?");
 
         if (answer) {
-          alert(maxClass + "를 잡았다!!");
+          alert(maxClass + "와(과) 친구가 되었다!!");
           var formData = new FormData();
           formData.append("image", myInput.files[0]);
           formData.append("maxIndex", maxIndex);
-          console.log(formData.get("image"));
           fetch(`${window.origin}/send_index`, {
             method: "POST",
             credentials: "include",
@@ -150,6 +139,24 @@
           alert("다시 촬영해주세요!");
         }
       }
+
+      async function preprocessImage(imgElement) {
+        // Convert the image to a tf.Tensor and preprocess it
+        let tensor = tf.browser
+          .fromPixels(imgElement)
+          .resizeNearestNeighbor([224, 224]) // Replace HEIGHT and WIDTH with what your model expects, for example [224, 224]
+          .toFloat();
+
+        // EfficientNet preprocessing: zero-centering by subtracting the mean pixel
+        const offset = tf.scalar(127.5);
+        tensor = tensor.sub(offset).div(offset);
+
+        // Our model expects batched inputs
+        const batched = tensor.expandDims();
+
+        return batched;
+      }
+
     </script>
     <!-- JavaScript Bundle with Popper -->
     <script
