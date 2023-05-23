@@ -24,7 +24,7 @@ def birdex():
 
 @application.route("/send_index", methods=["GET", "POST"])
 def update():
-    getIndex = int(request.form["maxIndex"]) + 1  # 모델 클래스에 비해 ???이 더해졌으므로 +1
+    getIndex = int(request.form["maxIndex"]) + 1
     date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     sql = f"UPDATE `birdex`.`birdex` SET `date` = '{date}', \
           `get_switch` = '1' WHERE (`no` = '{getIndex}');"

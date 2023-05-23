@@ -11,95 +11,82 @@
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    <!-- <script>
-      function callPythonFunction(funcName, num_id) {
-        fetch("birdex.py?func=" + funcName + "&num_id=" + num_id)
-          .then((response) => response.text())
-          .then((data) => console.log(data))
-          .catch((error) => console.error(error));
+    <style>
+      @import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
+
+      #body {
+        font-family: "NanumSquare", sans-serif;
       }
-    </script> -->
+
+      #header {
+        position: absolute;
+        font-family: "NanumSquare Bold";
+        top: 60px;
+        left: 50%;
+        z-index: 999;
+        color: white;
+        text-align: center;
+        transform: translate(-50%, -50%);
+      }
+
+      #header > p {
+        font-family: "NanumSquare";
+        font-size: 1em;
+      }
+
+      #video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+
+      #click-photo {
+        width: 130px;
+        color: white;
+        background-color: black;
+        font-family: "NanumSquare";
+        font-weight: 800;
+        font-size: 16px;
+        border-radius: 30px;
+        border: none;
+        padding: 15px 20px;
+        text-align: center;
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0, 0.2);
+        position: fixed;
+        bottom: 40px;
+        left: calc(50% - 65px);
+        z-index: 1;
+      }
+    </style>
+    <video id="video" autoplay></video>
+    <button id="click-photo">CAPTURE</button>
   </head>
   <body>
-    <div>Birdex</div>
+    <div id="header">
+      <h4>Birdex Capture Machine</h4>
+      <p>새 친구를 찾아보자!</p>
+    </div>
 
-    <button type="button" id="btn-start" class="btn btn-primary" onclick="init(); this.disabled=true;">Start</button>
-
-    <button type="button" id="btn-predict" class="btn btn-secondary" onclick="predict()">Predict</button>
-
-    <form method="POST" enctype="multipart/form-data">
-      <input id="myFileInput" type="file" accept="image/*;capture=camera" onchange="setThumbnail(event);" />
-      <div class="container">
-        <div class="col-md-4 px-0" id="image_container"></div>
-      </div>
-    </form>
-
-    <div id="webcam-container"></div>
-    <div id="label-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
-
     <script>
-      var myInput = document.getElementById("myFileInput");
-
-      function sendPic() {
-        var file = myInput.files[0];
-
-        // Send file here either by adding it to a `FormData` object
-        // and sending that via XHR, or by simply passing the file into
-        // the `send` method of an XHR instance.
-      }
-
-      myInput.addEventListener("change", sendPic, false);
-
-      function setThumbnail(event) {
-        var reader = new FileReader();
-
-        reader.onload = function (event) {
-          var img = document.createElement("img");
-          img.setAttribute("id", "bird-image");
-          img.setAttribute("class", "img-fluid");
-          img.setAttribute("src", event.target.result);
-          document.querySelector("div#image_container").appendChild(img);
-        };
-
-        reader.readAsDataURL(event.target.files[0]);
-      }
-    </script>
-
-    <script type="text/javascript">
-      // More API functions here:
-      // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-
-      // the link to your model provided by Teachable Machine export panel
+      let video = document.querySelector("#video");
+      let click_button = document.querySelector("#click-photo");
+      let model, labelContainer, metadata, maxPredictions, image_data_url, capturedImg;
       const URL = "../static/";
-
-      let model, labelContainer, metadata, maxPredictions;
 
       // Load the image model and setup the webcam
       async function init() {
         const modelURL = URL + "model.json";
         const response = await fetch(URL + "metadata.json");
         metadata = await response.json();
-        maxPredictions = metadata.maxPredictions;
         model = await tf.loadGraphModel(modelURL);
-
-        labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) {
-          labelContainer.appendChild(document.createElement("div"));
-        }
       }
 
-      // run the webcam image through the image model
-      async function predict() {
-        // predict can take in an image, video or canvas html element
-        var image = document.getElementById("bird-image");
-        // Preprocess the image
-        const preprocessedImage = await preprocessImage(image);
-
-        // Use the model to do inference on a tensor representing an image
-        const probability = await model.predict(preprocessedImage).data();
-
+      async function predict(image) {
         class Prediction {
           constructor(probability, className) {
             this.probability = probability;
@@ -107,58 +94,116 @@
           }
         }
 
+        const preprocessedImage = await preprocessImage(image);
+        const probability = await model.predict(preprocessedImage).data();
         let prediction = new Prediction(probability, metadata.labels);
+
         var maxProbability = 0;
-        var maxClass = "";
-        var maxIndex = 0;
+        maxClass = "";
+        maxIndex = 0;
+        maxPredictions = metadata.maxPredictions;
 
         for (let i = 0; i < maxPredictions; i++) {
-          const classPrediction = prediction.className[i] + ": " + prediction.probability[i].toFixed(2);
-          labelContainer.childNodes[i].innerHTML = classPrediction;
+          var classPrediction = prediction.className[i] + ": " + prediction.probability[i].toFixed(2);
+          console.log(classPrediction);
           if (prediction.probability[i] > maxProbability) {
             maxProbability = prediction.probability[i];
             maxClass = prediction.className[i];
             maxIndex = i;
           }
         }
-
-        let answer = confirm(maxClass + "가 맞습니까?");
-
+        let answer = confirm(maxClass + "(이)가 맞습니까?");
         if (answer) {
           alert(maxClass + "와(과) 친구가 되었다!!");
-          var formData = new FormData();
-          formData.append("image", myInput.files[0]);
-          formData.append("maxIndex", maxIndex);
-          fetch(`${window.origin}/send_index`, {
-            method: "POST",
-            credentials: "include",
-            body: formData,
-            cache: "no-cache",
-          });
+          fetch(image_data_url)
+            .then((res) => res.blob())
+            .then((blob) => {
+              var formData = new FormData();
+              formData.append("image", blob, "image.jpg");
+              formData.append("maxIndex", maxIndex);
+              fetch(`${window.origin}/send_index`, {
+                method: "POST",
+                credentials: "include",
+                body: formData,
+                cache: "no-cache",
+              });
+            });
         } else {
           alert("다시 촬영해주세요!");
         }
+        resetCapture();
+
+        // let answer = confirm(maxClass + "가 맞습니까?");
+        // if (answer) {
+        //   alert(maxClass + "와(과) 친구가 되었다!!");
+        //   var formData = new FormData();
+        //   formData.append("image", image);
+        //   formData.append("maxIndex", maxIndex);
+        //   fetch(`${window.origin}/send_index`, {
+        //     method: "POST",
+        //     credentials: "include",
+        //     body: formData,
+        //     cache: "no-cache",
+        //   });
+        // } else {
+        //   alert("다시 촬영해주세요!");
+        // }
+
+        // resetCapture();
       }
 
       async function preprocessImage(imgElement) {
-        // Convert the image to a tf.Tensor and preprocess it
-        let tensor = tf.browser
-          .fromPixels(imgElement)
-          .resizeNearestNeighbor([224, 224]) // Replace HEIGHT and WIDTH with what your model expects, for example [224, 224]
-          .toFloat();
+        let tensor = tf.browser.fromPixels(imgElement).resizeNearestNeighbor([224, 224]).toFloat();
 
-        // EfficientNet preprocessing: zero-centering by subtracting the mean pixel
         const offset = tf.scalar(127.5);
         tensor = tensor.sub(offset).div(offset);
 
-        // Our model expects batched inputs
         const batched = tensor.expandDims();
 
         return batched;
       }
 
+      function resetCapture() {
+        var capturedImg = document.getElementById("bird-image");
+        if (capturedImg) {
+          capturedImg.parentNode.removeChild(capturedImg);
+        }
+
+        let canvas = document.createElement("canvas");
+        canvas.width = 0;
+        canvas.height = 0;
+
+        let image_data_url = null;
+
+        video.play();
+      }
+
+      window.addEventListener("DOMContentLoaded", async function () {
+        init();
+        let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+        video.srcObject = stream;
+      });
+
+      click_button.addEventListener("click", function (event) {
+        video.pause();
+
+        let canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+        image_data_url = canvas.toDataURL("image/jpeg");
+        capturedImg = document.createElement("img");
+
+        capturedImg.addEventListener("load", function () {
+          predict(capturedImg);
+        });
+
+        capturedImg.setAttribute("id", "bird-image");
+        capturedImg.setAttribute("class", "img-fluid");
+        capturedImg.setAttribute("src", image_data_url);
+      });
     </script>
-    <!-- JavaScript Bundle with Popper -->
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -166,19 +211,3 @@
     ></script>
   </body>
 </html>
-
-<!-- 
-    Permission is hereby granted, free of charge, to any person obtaining a copy 
-    of this software and associated documentation files (the "Software"), to deal 
-    in the Software without restriction, including without limitation the rights 
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-    of the Software, and to permit persons to whom the Software is furnished to do so, 
-    subject to the following conditions: The above copyright notice and this permission 
-    notice shall be included in all copies or substantial portions of the Software.
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-    PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
-    BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
-    OR OTHER DEALINGS IN THE SOFTWARE.
--->
