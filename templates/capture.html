@@ -66,12 +66,14 @@
     <button id="click-photo">CAPTURE</button>
   </head>
   <body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+
     <div id="header">
       <h4>Birdex Capture Machine</h4>
       <p>새 친구를 찾아보자!</p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script>
       let video = document.querySelector("#video");
       let click_button = document.querySelector("#click-photo");
@@ -112,44 +114,74 @@
             maxIndex = i;
           }
         }
-        let answer = confirm(maxClass + "(이)가 맞습니까?");
-        if (answer) {
-          alert(maxClass + "와(과) 친구가 되었다!!");
-          fetch(image_data_url)
-            .then((res) => res.blob())
-            .then((blob) => {
-              var formData = new FormData();
-              formData.append("image", blob, "image.jpg");
-              formData.append("maxIndex", maxIndex);
-              fetch(`${window.origin}/send_index`, {
-                method: "POST",
-                credentials: "include",
-                body: formData,
-                cache: "no-cache",
-              });
-            });
-        } else {
-          alert("다시 촬영해주세요!");
-        }
-        resetCapture();
 
-        // let answer = confirm(maxClass + "가 맞습니까?");
+        Swal.fire({
+          title: "CAPTURED!",
+          text: maxClass + "(이)가 맞습니까?",
+          icon: "question",
+          confirmButtonText: "맞아요!",
+          showCancelButton: true,
+          cancelButtonText: "아니에요",
+          confirmButtonColor: "#4caf50",
+          cancelButtonColor: "#ff9800",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: maxClass + "와(과) 친구가 되었다!!",
+              text: "도감에 " + maxClass + "(이)가 등록되었습니다.",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 2500,
+            });
+            fetch(image_data_url)
+              .then((res) => res.blob())
+              .then((blob) => {
+                var formData = new FormData();
+                formData.append("image", blob, "image.jpg");
+                formData.append("maxIndex", maxIndex);
+                fetch(`${window.origin}/send_index`, {
+                  method: "POST",
+                  credentials: "include",
+                  body: formData,
+                  cache: "no-cache",
+                });
+              });
+            setTimeout(function () {
+              resetCapture();
+            }, 1500);
+          } else {
+            Swal.fire({
+              title: "다시 촬영해주세요!",
+              text: "인식에 실패하였습니다:)",
+              icon: "warning",
+              showConfirmButton: false,
+              timer: 2000,
+            });
+            setTimeout(function () {
+              resetCapture();
+            }, 1500);
+          }
+        });
+
+        // let answer = confirm(maxClass + "(이)가 맞습니까?");
         // if (answer) {
         //   alert(maxClass + "와(과) 친구가 되었다!!");
-        //   var formData = new FormData();
-        //   formData.append("image", image);
-        //   formData.append("maxIndex", maxIndex);
-        //   fetch(`${window.origin}/send_index`, {
-        //     method: "POST",
-        //     credentials: "include",
-        //     body: formData,
-        //     cache: "no-cache",
-        //   });
+        //   fetch(image_data_url)
+        //     .then((res) => res.blob())
+        //     .then((blob) => {
+        //       var formData = new FormData();
+        //       formData.append("image", blob, "image.jpg");
+        //       formData.append("maxIndex", maxIndex);
+        //       fetch(`${window.origin}/send_index`, {
+        //         method: "POST",
+        //         credentials: "include",
+        //         body: formData,
+        //         cache: "no-cache",
+        //       });
+        //     });
         // } else {
         //   alert("다시 촬영해주세요!");
         // }
-
-        // resetCapture();
       }
 
       async function preprocessImage(imgElement) {
