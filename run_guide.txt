@@ -1,1 +1,4 @@
-service mysql start
+- service mysql start
+- main 함수의 run 함수 긴걸로 되어있는지 확인
+- 오른쪽 위 new run flask 클릭
+- 미리보기 ㄱㄱ
