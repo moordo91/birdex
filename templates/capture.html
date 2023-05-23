@@ -70,7 +70,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 
     <div id="header">
-      <h4>Birdex Capture Machine</h4>
+      <h4>BIRDEX<br>
+          Capture Machine</h4>
       <p>새 친구를 찾아보자!</p>
     </div>
 
@@ -194,7 +195,7 @@
         init();
         let stream = await navigator.mediaDevices.getUserMedia({
           video: {facingMode: {exact: "environment"}}, 
-          audio: false
+          audio: false,
         });
         video.srcObject = stream;
       });
