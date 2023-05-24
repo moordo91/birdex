@@ -26,9 +26,9 @@ Please note that this project is a work in progress and does not yet offer the c
 
 ## Working Video
 
-A working video demonstration of the Birdex application can be found here: [[YouTube]](https://www.youtube.com/watch?v=V4dmQvzKQ8E)
+A basic working video demonstration of the Birdex application can be found here: [[YouTube]](https://www.youtube.com/watch?v=V4dmQvzKQ8E)
 
-*Note: Initially, the image is out of focus, but it will soon be normalized. Also, please be aware that the application of the image is a prototype and is somewhat different from the current UI/UX.*
+*Note: Initially, the video is out of focus, but it will soon be normalized. Also, please be aware that the application of the video is a prototype and is somewhat different from the current UI/UX.*
 
 ---
 
