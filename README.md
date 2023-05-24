@@ -74,6 +74,18 @@ git clone https://github.com/moordo91/birdex.git
 
 ---
 
+## Reference
+
+I wrote most of the code myself, and the code I referred to on the Internet was also modified considerably. However, I cannot help but admit that I have received a lot of help from the following contents.
+
+- [Teachable Machine](https://teachablemachine.withgoogle.com/)
+- [SweetAlert2](https://sweetalert2.github.io/)
+- [Pokedex](https://pokemonkorea.co.kr/pokedex)
+- [JoCoding](https://www.youtube.com/@jocoding)
+- [Flask lecture of coohde](https://www.youtube.com/playlist?list=PLuHgQVnccGMClNOIuT3b3M4YZjxmult2y)
+
+---
+
 ## Contact
 If you have any queries or suggestions, feel free to reach out to us.
 You can contact me at [moordo91@gmail.com](mailto:moordo91@gmail.com).
