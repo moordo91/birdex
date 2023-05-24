@@ -6,8 +6,6 @@ This is the project for the more enjoyable world.
 
 Birdex is a pioneering mobile web application that merges Computer Vision and Machine Learning technologies to recognize bird species and share fascinating descriptions about them. Simply snap a photo of a bird, and Birdex will not only identify the species but also register it to your own personal encyclopedia. This project provides an exciting blend of exploration and learning, instilling the joy of discovering and collecting an array of avian species.
 
-Birdex used EfficientNet and Tensorflow.js to build a bespoke model capable of identifying birds.
-
 ---
 
 ## Under Deveolopment
@@ -17,9 +15,10 @@ Please note that this project is a work in progress and does not yet offer the c
 ---
 
 ## Process
-![Capture process](/screenshots/homepage.png)
 
-![Birdex Process](/screenshots/recognition.png)
+![Capture process]([/screenshots/homepage.png](https://github.com/moordo91/birdex/assets/82254758/c7abf27b-45f6-46e8-8501-211558cd0f2b))
+
+![Birdex Process]([/screenshots/recognition.png](https://github.com/moordo91/birdex/assets/82254758/6e6a2244-38ce-4c12-8549-2b0af532337b))
 
 *Figures: Screenshots from Birdex application.*
 
