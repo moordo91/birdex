@@ -1,4 +1,4 @@
-# Birdex: Your Personal Bird Index
+# Birdex: Your Own Bird Index
 
 This is the project for the more enjoyable world.
 
