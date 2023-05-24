@@ -88,4 +88,4 @@ I wrote most of the code myself, and the code I referred to on the Internet was 
 
 ## Contact
 If you have any queries or suggestions, feel free to reach out to us.
-You can contact me at [moordo91@gmail.com](mailto:moordo91@gmail.com).
+You can contact me at 📧[moordo91@gmail.com](mailto:moordo91@gmail.com).
