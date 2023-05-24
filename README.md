@@ -74,7 +74,7 @@ git clone https://github.com/moordo91/birdex.git
 
 ---
 
-## Reference
+## Reference and Special Thanks
 
 I wrote most of the code myself, and the code I referred to on the Internet was also modified considerably. However, I cannot help but admit that I have received a lot of help from the following contents.
 
