@@ -26,7 +26,7 @@ Please note that this project is a work in progress and does not yet offer the c
 
 ## Working Video
 
-A working video demonstration of the Birdex application can be found here: [[YouTube]](https://www.youtube.com/watch?v=V4dmQvzKQ8E){:target="_blank"}
+A working video demonstration of the Birdex application can be found here: [[YouTube]](https://www.youtube.com/watch?v=V4dmQvzKQ8E)
 
 *Note: Initially, the image is out of focus, but it will soon be normalized. Also, please be aware that the application of the image is a prototype and is somewhat different from the current UI/UX.*
 
@@ -58,8 +58,8 @@ As I said before, more fun and brilliant ideas will be implemented soon!
 Dataset was crawled from the Google image search.
 **MobileNet** and **EfficientNet** with basic data augmentation methods are used to train Birdex. You can refer to the following papers:
 
-- [MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/abs/1704.04861){:target="_blank"}
-- [EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks](https://arxiv.org/abs/1905.11946){:target="_blank"}
+- [MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/abs/1704.04861)
+- [EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks](https://arxiv.org/abs/1905.11946)
 
 
 ---
