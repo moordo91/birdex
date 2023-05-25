@@ -45,7 +45,7 @@ As I said before, more fun and brilliant ideas will be implemented soon!
 
 ## Tech Stack
 
-* **Tensorflow:** Used for creating the custom machine learning model for bird recognition.
+* **Tensorflow:** Used for creating the machine learning model for bird recognition.
 * **TensorFlow.js:** Responsible for handling the machine learning tasks in the browser.
 * **Flask:** serves different webpages, handles data updates, and interacts with a database.
 * **Web Technologies:** HTML, CSS, and JavaScript are used to build the user interface and manage web interactions.
