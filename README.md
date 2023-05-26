@@ -34,7 +34,7 @@ A basic working video demonstration of the Birdex application can be found here:
 
 ## Features
 
-1. **Bird Recognition:** Utilizes Deep Learning (EfficientNet and MobileNet) and Computer Vision to identify bird species from images.
+1. **Bird Recognition:** Utilizes Deep Learning Computer Vision model (EfficientNet and MobileNet) to identify bird species from images.
 2. **Birdex Encyclopedia:** Upload your own personal bird photograph with each new discovery.
 3. **Educational Content:** Provides detailed insights about each bird species upon recognition.
 4. **Mobile Friendly:** The website is fully optimized for smartphones, using your cellphone camera and making bird spotting an enjoyable mobile activity.
